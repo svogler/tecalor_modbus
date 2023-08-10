@@ -1,8 +1,8 @@
 """
-Connection to a Stiebel Eltron ModBus API.
+Connection to Tecalor/Steibel Eltron Heatpump ModBus API, write data into an influx DB.
 
-See API details:
-https://www.stiebel-eltron.de/content/dam/ste/de/de/home/services/Downloadlisten/ISG%20Modbus_Stiebel_Bedienungsanleitung.pdf
+Modbus API :
+https://www.stiebel-eltron.de/content/dam/ste/cdbassets/historic/bedienungs-_u_installationsanleitungen/ISG_Modbus__b89c1c53-6d34-4243-a630-b42cf0633361.pdf
 
 Types of data:
 
@@ -46,6 +46,9 @@ REGMAP_INPUT = {
     'VORLAUFISTTEMPERATUR_NH':{'addr':  513, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
     'VORLAUFISTTEMPERATUR':   {'addr':  514, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
     'RUECKLAUISTTEMPERATUR':  {'addr':  515, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'HEIZUNGSDRUCK':          {'addr':  519, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'ISTTEMPERATURWW':        {'addr':  521, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+
     'OPERATING_MODE':         {'addr': 1500, 'reg' : REGISTER_HOLDING, 'type': 8, 'value': 0},
     'KOMFORT_TEMPERATUR_HK1':      {'addr': 1501, 'reg' : REGISTER_HOLDING, 'type': 2, 'value': 0},
     'ECO_TEMPERATUR_HK1':          {'addr': 1502, 'reg' : REGISTER_HOLDING, 'type': 2, 'value': 0},
@@ -59,6 +62,28 @@ REGMAP_INPUT = {
     'ECO_TEMPERATUR_WW':           {'addr': 1510, 'reg' : REGISTER_HOLDING, 'type': 2, 'value': 0},
     'WARMWASSERSTUFEN':            {'addr': 1511, 'reg' : REGISTER_HOLDING, 'type': 2, 'value': 0},
     'OPERATING_STATUS':            {'addr': 2500, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_TAG_WAERMEMENGE':        {'addr': 3500, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_SUMME_WAERMEMENGE':      {'addr': 3501, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_TAG_WAERMEMENGE':    {'addr': 3503, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_SUMME_WAERMEMENGE':  {'addr': 3504, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'NHZ_HEIZEN_SUMME_WAERMEMENGE':     {'addr': 3507, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'NHZ_WARMWASSER_SUMME_WAERMEMENGE': {'addr': 3509, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_TAG_LEISTUNG':           {'addr': 3510, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_SUMME_LEISTUNG':         {'addr': 3512, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_TAG_LEISTUNG':       {'addr': 3513, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_SUMME_LEISTUNG':     {'addr': 3514, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD1_HEIZEN_LAUFZEIT':              {'addr': 3538, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD2_HEIZEN_LAUFZEIT':              {'addr': 3539, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD12_HEIZEN_LAUFZEIT':             {'addr': 3540, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD1_WARMWASSER_LAUFZEIT':          {'addr': 3541, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD2_WARMWASSER_LAUFZEIT':          {'addr': 3542, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD12_WARMWASSER_LAUFZEIT':         {'addr': 3543, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_KUEHLEN_LAUFZEIT':              {'addr': 3544, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_NHZ1_LAUFZEIT':                 {'addr': 3545, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_NHZ2_LAUFZEIT':                 {'addr': 3546, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_NHZ12_LAUFZEIT':                {'addr': 3547, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+
+
 
 }
 
@@ -140,10 +165,11 @@ class StiebelEltronAPI():
         
         value = result_input[0]
 
+        # conversation based on type
         if value_entry['type'] == 2:
-            value = value * 0.1
+            value = round(value * 0.1,1)
         if value_entry['type'] == 7:
-            value = value  * 0.01
+            value = round(value  * 0.01,1)
         
         return value
 
