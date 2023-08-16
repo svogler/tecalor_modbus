@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 import datetime
 from pystiebeleltron import pystiebeleltron as pyse
+
+# Important -> pymodbus 2.5.3. required, higher versions may need small rewrite
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+
 from influxdb import InfluxDBClient
+
 
 # INFLUXDB Parameters
 INFLUX_DB_HOST = '192.168.178.22'
