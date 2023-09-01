@@ -1,0 +1,14 @@
+# influx db parameters
+influx_db:
+    host: <hostname>
+    port: <port>
+    db_name: <dbname>
+    user: <username>
+    password: <password>
+
+# modbus internet service gateway parameters
+modbus_isg:
+    host: <isg host>
+    port: <isg port>
+    slave: <slave, 1>
+  
