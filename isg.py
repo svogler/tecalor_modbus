@@ -1,23 +1,14 @@
 #!/usr/bin/env python3
 import datetime
-from pystiebeleltron import pystiebeleltron as pyse
+import tecalorapi as tecalorapi
+import yaml
+from argparse import ArgumentParser
 
 # Important -> pymodbus 2.5.3. required, higher versions may need small rewrite
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
 from influxdb import InfluxDBClient
 
-
-# INFLUXDB Parameters
-INFLUX_DB_HOST = '192.168.178.22'
-INFLUX_DB_PORT = 8086
-INFLUX_DB_NAME = 'Tecalor'
-INFLUX_DB_USER = 'admin'
-INFLUX_DB_PASSWORD = '*****'
-
-TECALOR_ISG_HOST = "192.168.178.87"
-TECALOR_ISG_PORT = 502
-TECALOR_ISG_SLAVE = 1
 
 def write_to_db(client, time, key, value):
     
@@ -32,13 +23,22 @@ def write_to_db(client, time, key, value):
     client.write_points(json_body)
 
 def main():
+    cmdline = ""
+    parser = ArgumentParser()
+    parser.add_argument("config", help="location of config file")
+    args = parser.parse_args()
+    print(args.config)
+    
+    with open(args.config, "r") as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+
     now = datetime.datetime.utcnow()
 
-    print(now)
+    influx_client = InfluxDBClient(host=config["influx_db"]["host"], port=config["influx_db"]["port"], username=config["influx_db"]["user"], password=config["influx_db"]["password"], database=config["influx_db"]["db_name"])
 
-    with ModbusClient(host=TECALOR_ISG_HOST, port=TECALOR_ISG_PORT, timeout=2) as client:
-        client.connect()
-        unit = pyse.StiebelEltronAPI(client, TECALOR_ISG_SLAVE)
+    with ModbusClient(host=config["modbus_isg"]["host"], port=config["modbus_isg"]["port"], timeout=2) as modbus_client:
+        modbus_client.connect()
+        unit = tecalorapi.TecalorAPI(modbus_client, config["modbus_isg"]["slave"])
 
         attributes = [
             'OPERATING_MODE', 'AUSSENTEMPERATUR', 'ISTTEMPERATURWW', 'HEIZUNGSDRUCK', 'OPERATING_STATUS',
@@ -50,10 +50,10 @@ def main():
             'VD_NHZ1_LAUFZEIT', 'VD_NHZ2_LAUFZEIT', 'VD_NHZ12_LAUFZEIT', 'FEHLER_STATUS'
         ]
 
-        with InfluxDBClient(INFLUX_DB_HOST, INFLUX_DB_PORT, INFLUX_DB_USER, INFLUX_DB_PASSWORD, INFLUX_DB_NAME) as influx_client:
-            for attribute in attributes:
-                value = unit.get_conv_val(attribute)
-                write_to_db(influx_client, now, attribute, value)
+        for attribute in attributes:
+            value = unit.get_conv_val(attribute)
+            write_to_db(influx_client, now, attribute, value)
 
 if __name__ == "__main__":
     main()
+
