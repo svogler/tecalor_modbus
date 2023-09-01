@@ -11,6 +11,7 @@ The script runs every 15 mins via a cron job.
 */30 * * * * /usr/bin/python3 /home/pi/tecalor_wp/isg.py /home/pi/tecalor_wp/config.yaml >> /home/pi/tecalor_wp/cron.log
 ```
 
+## Screenshot
 ![Dashboard](docs/screenshot_grafana.jpg?raw=true "Dashboard")
 
 # License
