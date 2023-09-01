@@ -29,6 +29,19 @@
   "liveNow": false,
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 22,
+      "panels": [],
+      "title": "Allgmein",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "influxdb",
         "uid": "h9S0qwzRz"
@@ -38,7 +51,17 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "5": {
+                  "index": 0,
+                  "text": "Warmwasserbetrieb"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -55,7 +78,7 @@
         "h": 2,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 8,
       "options": {
@@ -102,7 +125,7 @@
             [
               {
                 "params": [
-                  "WPMODUS"
+                  "OPERATING_MODE"
                 ],
                 "type": "field"
               },
@@ -115,8 +138,110 @@
           "tags": []
         }
       ],
-      "title": "Modus",
+      "title": "WP Modus",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "h9S0qwzRz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 0,
+        "y": 3
+      },
+      "id": 24,
+      "maxDataPoints": 200,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "alias": "Fehler",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "h9S0qwzRz"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "tecalor_measurement",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT last(\"FEHLER_STATUS\") FROM \"tecalor_measurement\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "FEHLER_STATUS"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Operation / Fehler",
+      "type": "status-history"
     },
     {
       "datasource": {
@@ -153,7 +278,7 @@
         "h": 5,
         "w": 12,
         "x": 0,
-        "y": 2
+        "y": 6
       },
       "id": 10,
       "options": {
@@ -460,8 +585,372 @@
           "tags": []
         }
       ],
-      "title": "Status",
+      "title": "WP Status",
       "type": "status-history"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "h9S0qwzRz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 35
+              },
+              {
+                "color": "orange",
+                "value": 42
+              },
+              {
+                "color": "red",
+                "value": 48
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 0,
+        "y": 11
+      },
+      "id": 26,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "h9S0qwzRz"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "tecalor_measurement",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "ISTTEMPERATURWW"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Warmwasser",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "h9S0qwzRz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 5,
+        "x": 5,
+        "y": 11
+      },
+      "id": 28,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "h9S0qwzRz"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "tecalor_measurement",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "AUSSENTEMPERATUR"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Außentemperatur",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 20,
+      "panels": [],
+      "title": "Warmwasser",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "h9S0qwzRz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 10,
+        "x": 0,
+        "y": 16
+      },
+      "id": 18,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.2",
+      "targets": [
+        {
+          "alias": "Leistung",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "h9S0qwzRz"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "tecalor_measurement",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"VD_WARMWASSER_SUMME_LEISTUNG\") FROM \"tecalor_measurement\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "VD_WARMWASSER_SUMME_LEISTUNG"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Waermemenge",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "h9S0qwzRz"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "none"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "tecalor_measurement",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "VD_WARMWASSER_SUMME_WAERMEMENGE"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Jahresarbeitszahl WW",
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "JAZ WW",
+            "binary": {
+              "left": "Waermemenge",
+              "operator": "/",
+              "reducer": "sum",
+              "right": "Leistung"
+            },
+            "mode": "binary",
+            "reduce": {
+              "reducer": "sum"
+            },
+            "replaceFields": false
+          }
+        }
+      ],
+      "type": "stat"
     },
     {
       "datasource": {
@@ -521,12 +1010,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 7
+        "y": 20
       },
-      "id": 16,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": [],
@@ -541,7 +1030,7 @@
       },
       "targets": [
         {
-          "alias": "Leistung",
+          "alias": "Außentemperatur",
           "datasource": {
             "type": "influxdb",
             "uid": "h9S0qwzRz"
@@ -569,49 +1058,7 @@
             [
               {
                 "params": [
-                  "VD_WARMWASSER_SUMME_LEISTUNG"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "Wärmemenge",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "h9S0qwzRz"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "tecalor_measurement",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "VD_WARMWASSER_SUMME_WAERMEMENGE"
+                  "AUSSENTEMPERATUR"
                 ],
                 "type": "field"
               },
@@ -624,21 +1071,8 @@
           "tags": []
         }
       ],
-      "title": "Warmwasser",
+      "title": "Außentemperatur",
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 15
-      },
-      "id": 14,
-      "panels": [],
-      "title": "Row title",
-      "type": "row"
     },
     {
       "datasource": {
@@ -701,7 +1135,7 @@
         "h": 9,
         "w": 11,
         "x": 0,
-        "y": 16
+        "y": 29
       },
       "id": 2,
       "options": {
@@ -718,6 +1152,7 @@
       },
       "targets": [
         {
+          "alias": "WW Temperatur",
           "datasource": {
             "type": "influxdb",
             "uid": "h9S0qwzRz"
@@ -819,12 +1254,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 11,
-        "x": 11,
-        "y": 16
+        "x": 0,
+        "y": 38
       },
-      "id": 4,
+      "id": 16,
       "options": {
         "legend": {
           "calcs": [],
@@ -839,6 +1274,7 @@
       },
       "targets": [
         {
+          "alias": "Leistung",
           "datasource": {
             "type": "influxdb",
             "uid": "h9S0qwzRz"
@@ -866,7 +1302,49 @@
             [
               {
                 "params": [
-                  "AUSSENTEMPERATUR"
+                  "VD_WARMWASSER_SUMME_LEISTUNG"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Wärmemenge",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "h9S0qwzRz"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "tecalor_measurement",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "VD_WARMWASSER_SUMME_WAERMEMENGE"
                 ],
                 "type": "field"
               },
@@ -879,8 +1357,21 @@
           "tags": []
         }
       ],
-      "title": "Außentemperatur",
+      "title": "Warmwasser Wärmemengen",
       "type": "timeseries"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 45
+      },
+      "id": 14,
+      "panels": [],
+      "title": "Row title",
+      "type": "row"
     }
   ],
   "schemaVersion": 37,
@@ -890,13 +1381,13 @@
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-2d",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Tecalor",
   "uid": "AFnf3wzRz",
-  "version": 25,
+  "version": 45,
   "weekStart": ""
 }
