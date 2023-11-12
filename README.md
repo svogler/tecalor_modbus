@@ -1,6 +1,6 @@
 # Tecalor Heatpump Modbus Interface
 
-This package reads Heatpump data from Tecalor Internet Service Gateway and writes it into an influx database. A grafana dashboard is used to visualize the data.
+This package reads Heatpump data from Tecalor Internet Service Gateway (ISG) and writes it into an influx database. A grafana dashboard is used to visualize the data.
 
 Code is tested with a Tecalor ACS Heatpump, should work for other Tecalor / Stiebel Eltron models as well.
 
