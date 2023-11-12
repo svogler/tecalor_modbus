@@ -70,7 +70,7 @@ REGMAP_INPUT = {
     'NHZ_HEIZEN_SUMME_WAERMEMENGE':     {'addr': 3507, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'NHZ_WARMWASSER_SUMME_WAERMEMENGE': {'addr': 3509, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_HEIZEN_TAG_LEISTUNG':           {'addr': 3510, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
-    'VD_HEIZEN_SUMME_LEISTUNG':         {'addr': 3512, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_SUMME_LEISTUNG':         {'addr': 3511, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_TAG_LEISTUNG':       {'addr': 3513, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_SUMME_LEISTUNG':     {'addr': 3514, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD1_HEIZEN_LAUFZEIT':              {'addr': 3538, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
@@ -83,6 +83,8 @@ REGMAP_INPUT = {
     'VD_NHZ1_LAUFZEIT':                 {'addr': 3545, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_NHZ2_LAUFZEIT':                 {'addr': 3546, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_NHZ12_LAUFZEIT':                {'addr': 3547, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_LAUFZEIT':               {'addr': 3643, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_LAUFZEIT':           {'addr': 3644, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
 
 
 
@@ -237,6 +239,5 @@ class TecalorAPI():
     def get_cooling_status(self):
         return bool(self.get_conv_val('OPERATING_STATUS') &
                     OPERATING_STATUS['COOLING'])
-
 
 
