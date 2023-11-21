@@ -6,7 +6,7 @@ Code is tested with a Tecalor ACS Heatpump, should work for other Tecalor / Stie
 
 Modbus  Specification for Tecalor / Stiebel Eltron: https://www.stiebel-eltron.de/content/dam/ste/cdbassets/historic/bedienungs-_u_installationsanleitungen/ISG_Modbus__b89c1c53-6d34-4243-a630-b42cf0633361.pdf
 
-config.yaml stores influx database host, user, password.
+config.yaml stores influx db access data and ISG parameters for the modbux interface.
 
 The script runs every 30 mins via a cron job.
 ```
