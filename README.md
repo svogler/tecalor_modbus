@@ -1,5 +1,7 @@
 # Tecalor Heatpump Modbus Interface
 
+### Visualization of Tecalor / Stiebel ACS Heatpump data. I use it for tracking and parameter optimization. ServiceWelt data is not enough for me and is super-slow. Modbus provides all the data, so let's visualize it.
+
 This package reads Heatpump data from Tecalor Internet Service Gateway (ISG) and writes it into an influx database. A grafana dashboard is used to visualize the data.
 
 Code is tested with a Tecalor ACS Heatpump, should work for other Tecalor / Stiebel Eltron models as well.
