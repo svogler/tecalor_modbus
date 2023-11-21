@@ -6,7 +6,9 @@ Code is tested with a Tecalor ACS Heatpump, should work for other Tecalor / Stie
 
 Modbus  Specification for Tecalor / Stiebel Eltron: https://www.stiebel-eltron.de/content/dam/ste/cdbassets/historic/bedienungs-_u_installationsanleitungen/ISG_Modbus__b89c1c53-6d34-4243-a630-b42cf0633361.pdf
 
-The script runs every 15 mins via a cron job.
+config.yaml stores influx database host, user, password.
+
+The script runs every 30 mins via a cron job.
 ```
 */30 * * * * /usr/bin/python3 /home/pi/tecalor_wp/isg.py /home/pi/tecalor_wp/config.yaml >> /home/pi/tecalor_wp/cron.log
 ```
