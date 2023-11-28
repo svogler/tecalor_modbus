@@ -1,3 +1,5 @@
+from pymodbus.pdu import ExceptionResponse
+
 """
 Connection to Tecalor/Steibel Eltron Heatpump ModBus API, write data into an influx DB.
 
@@ -48,6 +50,16 @@ REGMAP_INPUT = {
     'RUECKLAUISTTEMPERATUR':  {'addr':  515, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
     'HEIZUNGSDRUCK':          {'addr':  519, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
     'ISTTEMPERATURWW':        {'addr':  521, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'SOLLTEMPERATURWW':       {'addr':  522, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'EINSATZGRENZE_HZG':      {'addr':  532, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'EINSATZGRENZE_WW':       {'addr':  533, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'RUECKLAUFTEMPERATUR':    {'addr':  541, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'VORLAUFTEMPERATUR':      {'addr':  542, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'HEISSGASTEMPERATUR':     {'addr':  543, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'DRUCK_NIEDERDRUCK':      {'addr':  544, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'DRUCK_MITTELDRUCK':      {'addr':  545, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'DRUCK_HOCHDRUCK':        {'addr':  546, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
+    'WP_WASSERVOLUMENSTROM':  {'addr':  547, 'reg' : REGISTER_INPUT, 'type': 2, 'value': 0},
 
     'OPERATING_MODE':         {'addr': 1500, 'reg' : REGISTER_HOLDING, 'type': 8, 'value': 0},
     'KOMFORT_TEMPERATUR_HK1':      {'addr': 1501, 'reg' : REGISTER_HOLDING, 'type': 2, 'value': 0},
@@ -65,14 +77,22 @@ REGMAP_INPUT = {
     'FEHLER_STATUS':               {'addr': 2503, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_HEIZEN_TAG_WAERMEMENGE':        {'addr': 3500, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_HEIZEN_SUMME_WAERMEMENGE':      {'addr': 3501, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_SUMME_WAERMEMENGE_MWH':  {'addr': 3502, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_TAG_WAERMEMENGE':    {'addr': 3503, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_SUMME_WAERMEMENGE':  {'addr': 3504, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
-    'NHZ_HEIZEN_SUMME_WAERMEMENGE':     {'addr': 3507, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
-    'NHZ_WARMWASSER_SUMME_WAERMEMENGE': {'addr': 3509, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_SUMME_WAERMEMENGE_MWH':  {'addr': 3505, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'NHZ_HEIZEN_SUMME_WAERMEMENGE':     {'addr': 3506, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'NHZ_HEIZEN_SUMME_WAERMEMENGE_MWH': {'addr': 3507, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'NHZ_WARMWASSER_SUMME_WAERMEMENGE': {'addr': 3508, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'NHZ_WARMWASSER_SUMME_WAERMEMENGE_MWH': {'addr': 3509, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_HEIZEN_TAG_LEISTUNG':           {'addr': 3510, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_HEIZEN_SUMME_LEISTUNG':         {'addr': 3511, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_HEIZEN_SUMME_LEISTUNG_MWH':     {'addr': 3512, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_TAG_LEISTUNG':       {'addr': 3513, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_SUMME_LEISTUNG':     {'addr': 3514, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+    'VD_WARMWASSER_SUMME_LEISTUNG_MWH': {'addr': 3515, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
+
+
     'VD1_HEIZEN_LAUFZEIT':              {'addr': 3538, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD2_HEIZEN_LAUFZEIT':              {'addr': 3539, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD12_HEIZEN_LAUFZEIT':             {'addr': 3540, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
@@ -85,9 +105,6 @@ REGMAP_INPUT = {
     'VD_NHZ12_LAUFZEIT':                {'addr': 3547, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_HEIZEN_LAUFZEIT':               {'addr': 3643, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
     'VD_WARMWASSER_LAUFZEIT':           {'addr': 3644, 'reg' : REGISTER_INPUT, 'type': 6, 'value': 0},
-
-
-
 }
 
 
@@ -154,6 +171,13 @@ class TecalorAPI():
         self._registers_map = REGMAP_INPUT
         self._slave = slave
 
+    def twos_comp(self, val, bits):
+        """ Negative numbers are represented in 2's comp representation
+            this function computes the 2's complement of int value val """
+        if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
+            val = val - (1 << bits)        # compute negative value
+        return val                         # return positive value as is
+
     def get_conv_val(self, name):
 
         value_entry = self._registers_map.get(name)
@@ -161,13 +185,22 @@ class TecalorAPI():
             return None
         
         if value_entry['reg'] == REGISTER_INPUT:
-            result_input = self._conn.read_input_registers(unit=self._slave, address = value_entry['addr'], count = 1).registers
+            result_input = self._conn.read_input_registers(unit=self._slave, address = value_entry['addr'], count = 1)
 
         if value_entry['reg'] == REGISTER_HOLDING:
-            result_input = self._conn.read_holding_registers(unit=self._slave, address = value_entry['addr'], count = 1).registers
+            result_input = self._conn.read_holding_registers(unit=self._slave, address = value_entry['addr'], count = 1)
         
+        if type(result_input) == ExceptionResponse:
+            print("Illegal Address " + name + " " + str(value_entry['addr']))
+            return None
         
-        value = result_input[0]
+        value = result_input.registers[0]
+
+        if value == UNAVAILABLE_OBJECT:
+            return None
+
+        # convert negative values read from Modbus
+        value = self.twos_comp(int(value), 16)
 
         # conversation based on type
         if value_entry['type'] == 2:
@@ -176,6 +209,9 @@ class TecalorAPI():
             value = round(value  * 0.01,1)
         
         return value
+
+
+
 
 #    def get_raw_input_register(self, name):
 #        """Get raw register value by name."""
