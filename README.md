@@ -6,7 +6,7 @@ This package reads Heatpump data from Tecalor Internet Service Gateway (ISG) and
 
 Code is tested with a Tecalor ACS Heatpump, should work for other Tecalor / Stiebel Eltron models as well.
 
-Modbus  Specification for Tecalor / Stiebel Eltron: https://www.stiebel-eltron.de/content/dam/ste/cdbassets/historic/bedienungs-_u_installationsanleitungen/ISG_Modbus__b89c1c53-6d34-4243-a630-b42cf0633361.pdf
+Modbus  Specification for Tecalor / Stiebel Eltron: https://www.stiebel-eltron.de/toolbox/content/docs/anleitungen/installation/ISG_Modbus/321798-44755-9770_ISG%20Modbus_de_en_fr_it_nl_cs_sk_pl_hu.pdf
 
 config.yaml stores influx db access data and ISG parameters for the modbux interface.
 
